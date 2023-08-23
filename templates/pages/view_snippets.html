@@ -28,7 +28,7 @@
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
                         <th scope="col">Действия</th>
-                        <th scope="col"></th>
+                        <!-- <th scope="col"></th> -->
                     </tr>
                     </thead>
                     <tbody>
@@ -36,16 +36,26 @@
                     {% for snippet in snippets %}
                         <tr>
                             <td scope="row">{{ snippet.id }}</td>
-                            <td><a href="{% url 'snippet' snippet.id %}">{{ snippet.name }}</a></td>
+                            <td>
+                                <a href="{% url 'snippet' snippet.id %}">{{ snippet.name }}
+                                    <form action="{% url 'del_snippet' snippet.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </a>
+                                <a href="{% url 'edit_snippet' snippet.id %}">
+                                    <i style="color: red" class="fas fa-edit"></i>
+                                </a>
+                            </td>
                             <td>{{ snippet.creation_date }}</td>
                             <td> <button value="{% url 'home' %}">Изменить</button> </td>
-                            <td>
-                                <!-- <a href="{% url 'del_snippet' snippet.id %}">Удалить</a> -->
+                            <!-- <td>
+                                <a href="{% url 'del_snippet' snippet.id %}">Удалить</a>
                                 <form action="{% url 'del_snippet' snippet.id %}" method="post">
                                     {% csrf_token %}
-                                    <button>Удалить</button>
+                                    <button><i class="fa-solid fa-trash"></i></button>
                                 </form>
-                            </td>
+                            </td> -->
                         </tr>
                     {% endfor %}
 
