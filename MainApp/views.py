@@ -22,7 +22,7 @@ def add_snippet_page(request):
         if form.is_valid():
             form.save()
             return redirect("snippets_list")
-        return render(request, 'add_snippet.html', {'form': form})
+        return render(request, 'pages/add_snippet.html', {'form': form})
 
 def snippets_page(request):
     data = Snippet.objects.all()
@@ -47,3 +47,11 @@ def snippet_data(request, id):
 #             form.save()
 #             return redirect("snippets_list")
 #         return render(request,'add_snippet.html',{'form': form})
+
+def snippet_del(request, id):
+    snippet = Snippet.objects.get(id=id)
+    if request.method == "POST":
+        snippet.delete()
+        return redirect("snippets_list")
+    return render(request, 'snippet_list')
+
