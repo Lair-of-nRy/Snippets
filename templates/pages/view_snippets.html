@@ -27,7 +27,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
-                        <th scope="col">Действия</th>
+                        <th scope="col">Пользователь</th>
                         <!-- <th scope="col"></th> -->
                     </tr>
                     </thead>
@@ -48,7 +48,8 @@
                                 </a>
                             </td>
                             <td>{{ snippet.creation_date }}</td>
-                            <td> <button value="{% url 'home' %}">Изменить</button> </td>
+                            <td>{{ snippet.user.username }}</td>
+                            <!-- <td> <button value="{% url 'home' %}">Изменить</button> </td> -->
                             <!-- <td>
                                 <a href="{% url 'del_snippet' snippet.id %}">Удалить</a>
                                 <form action="{% url 'del_snippet' snippet.id %}" method="post">
