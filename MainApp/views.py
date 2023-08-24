@@ -4,13 +4,14 @@ from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
     return render(request, 'pages/index.html', context)
 
-
+@login_required
 def add_snippet_page(request):
     if request.method == "GET":
         form = SnippetForm()
@@ -104,8 +105,11 @@ def login(request):
        if user is not None:
            auth.login(request, user)
        else:
-           # Return error message
-           pass
+           context = {
+                'pagename': 'PythonBin',
+                'errors': ['wrong username or password']
+            }
+           return render(request, 'pages/index.html', context)
    return redirect('home')
 
 def logout(request):
