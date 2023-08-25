@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render, redirect
 from MainApp.models import Snippet
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserRegistrationForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -31,7 +31,7 @@ def add_snippet_page(request):
         return render(request, 'pages/add_snippet.html', {'form': form})
 
 def snippets_page(request):
-    data = Snippet.objects.all()
+    data = Snippet.objects.filter(public=True)
     count = 0
     for i in data:
         count += 1
@@ -74,6 +74,7 @@ def snippet_edit(request, id):
         snippet.name = data_form["name"]
         snippet.lang = data_form["lang"]
         snippet.code = data_form["code"]
+        snippet.public = data_form.get('public', False)
         snippet.creation_date = data_form["creation_date"]
         snippet.save()
         return redirect("snippets_list")
@@ -105,13 +106,36 @@ def login(request):
        if user is not None:
            auth.login(request, user)
        else:
-           context = {
+            context = {
                 'pagename': 'PythonBin',
                 'errors': ['wrong username or password']
             }
-           return render(request, 'pages/index.html', context)
+            return render(request, 'pages/index.html', context)
    return redirect('home')
 
 def logout(request):
     auth.logout(request)
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def my_snippets(request):
+    snippets = Snippet.objects.filter(user=request.user)
+    context = {
+        'pagename': 'Мои сниппеты',
+        'snippets': snippets
+        }
+    return render(request, 'pages/view_snippets.html', context)
+
+def create_user(request):
+    context = {'pagename': 'регистрация пользователя'}
+    if request.method == 'GET':
+        form = UserRegistrationForm
+        context['form'] = form
+        return render(request, 'pages/registration.html', context)
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        context['form'] = form
+        return render(request, 'pages/registration', context)
