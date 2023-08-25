@@ -16,3 +16,6 @@ class Snippet(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
     public = models.BooleanField(default=True)
 
+    def __repr__(self):
+        return f'Snippet({self.id}, {self.name}, {self.lang}, {self.user}'
+

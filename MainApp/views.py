@@ -32,9 +32,7 @@ def add_snippet_page(request):
 
 def snippets_page(request):
     data = Snippet.objects.filter(public=True)
-    count = 0
-    for i in data:
-        count += 1
+    count = data.count()
     context = {
         'snippets': data,
         'count': count
@@ -120,9 +118,11 @@ def logout(request):
 @login_required
 def my_snippets(request):
     snippets = Snippet.objects.filter(user=request.user)
+    count = snippets.count() 
     context = {
         'pagename': 'Мои сниппеты',
-        'snippets': snippets
+        'snippets': snippets,
+        'count': count
         }
     return render(request, 'pages/view_snippets.html', context)
 
